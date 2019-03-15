@@ -1,6 +1,6 @@
 node {
   checkout scm
-  env.PATH = "${tool 'Maven3'}/bin:${env.PATH}"
+  env.PATH = "${tool 'M3'}/bin:${env.PATH}"
   stage('Package') {
     dir('webapp') {
       sh 'mvn clean package -DskipTests'
@@ -9,7 +9,7 @@ node {
 
   stage('Create Docker Image') {
     dir('webapp') {
-      docker.build("arungupta/docker-jenkins-pipeline:${env.BUILD_NUMBER}")
+      docker.build("girivardhankumar/docker-jenkins-pipeline:${env.BUILD_NUMBER}")
     }
   }
 
@@ -20,7 +20,7 @@ node {
 
       // Run application using Docker image
       sh "DB=`docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' db`"
-      sh "docker run -e DB_URI=$DB arungupta/docker-jenkins-pipeline:${env.BUILD_NUMBER}"
+      sh "docker run -e DB_URI=$DB girivardhankumar/docker-jenkins-pipeline:${env.BUILD_NUMBER}"
 
       // Run tests using Maven
       //dir ('webapp') {
@@ -38,7 +38,7 @@ node {
     try {
       dir('webapp') {
         sh "mvn test"
-        docker.build("arungupta/docker-jenkins-pipeline:${env.BUILD_NUMBER}").push()
+        docker.build("girivardhankumar/docker-jenkins-pipeline:${env.BUILD_NUMBER}").push()
       }
     } catch (error) {
 
