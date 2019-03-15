@@ -1,6 +1,7 @@
 node {
   checkout scm
-  env.PATH = "${tool 'M3'}/bin:${env.PATH}"
+  def mvnHome = tool 'M3'
+  env.PATH = "${mvnHome}/bin:${env.PATH}"
   stage('Package') {
     dir('webapp') {
       sh 'mvn clean package -DskipTests'
